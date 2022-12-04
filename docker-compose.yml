@@ -91,6 +91,21 @@ services:
       - "9081:9080"
     restart: "always"
 
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - 16686:16686 
+
+  otel:
+    image: otel/opentelemetry-collector-contrib:latest
+    volumes:
+      - ./config/otel.yaml:/etc/otel-config.yaml
+    command:
+      '--config=/etc/otel-config.yaml'
+    environment:
+      LOGSPOUT: ignore
+    depends_on:
+      - jaeger
 
   #
   # Telegraf reads system metrics, and will expose them to Prometheus and send them to Loki
@@ -144,6 +159,9 @@ services:
     ports:
       - "3000:3000"
     restart: "always"
+    depends_on:
+      - jaeger
+      - otel
 
 
 
