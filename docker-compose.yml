@@ -1,19 +1,9 @@
 version: "3"
 
-volumes: 
+volumes:
   logs:
 
 services:
-  #
-  # Container to make fake logs
-  #
-  logs:
-    build:
-      context: docker/logs
-      dockerfile: "Dockerfile"
-    volumes:
-      - logs:/logs/
-    restart: "always"
 
   #
   # Tool container for importing/exporting dashboards.
@@ -26,55 +16,6 @@ services:
       - .:/mnt
       - logs:/logs/
     restart: "always"
-
-  #
-  # Container to continuously ping hosts.
-  #
-  ping:
-    build:
-      context: docker/ping
-      dockerfile: "Dockerfile"
-    environment:
-      #
-      # Host to ping.  Can be hostname or IP.  Space-delimited.
-      # Note that DNS lookups may fail, so consider pinging some IPs...
-      #
-      HOSTS: "google.com amazon.com google-dns cloudflare-dns "
-      #
-      # Comment the previous line and uncomment this one if you'd like to ping 
-      # some hosts on different continents.
-      #
-      #HOSTS: "google.com amazon.com google-dns cloudflare-dns cheetah.jp leopard.se"
-    volumes:
-      - logs:/logs/
-      - ./hosts.txt:/etc/hosts
-    restart: "always"
-
-  #
-  # Get metrics from ping logs for Prometheus.
-  #
-  ping-metrics:
-    build:
-      context: docker/ping-metrics
-      dockerfile: "Dockerfile"
-    volumes:
-      - .:/mnt
-      - logs:/logs/
-    restart: "always"
-
-
-  #
-  # Container to read metrics from SEPTA Regional Rail.
-  #
-  septa:
-    build:
-      context: docker/septa
-      dockerfile: "Dockerfile"
-    volumes:
-      - .:/mnt
-      - logs:/logs/
-    restart: "always"
-
 
   #
   # Read logs from files and ingest into Loki.
@@ -94,7 +35,7 @@ services:
   jaeger:
     image: jaegertracing/all-in-one:latest
     ports:
-      - 16686:16686 
+      - 16686:16686
 
   otel:
     image: otel/opentelemetry-collector-contrib:latest
@@ -108,20 +49,10 @@ services:
       - jaeger
 
   #
-  # Telegraf reads system metrics, and will expose them to Prometheus and send them to Loki
-  #
-  telegraf:
-    image: telegraf:latest
-    volumes:
-      - ./config/telegraf.conf:/etc/telegraf/telegraf.conf
-    restart: "always"
-
-
-  #
   # The Loki database for storing logs.
   #
   loki:
-    image: grafana/loki:2.6.1
+    image: grafana/loki:latest
     volumes:
       - ./config:/mnt/config
       - ./data/loki-data:/tmp/loki
@@ -162,10 +93,3 @@ services:
     depends_on:
       - jaeger
       - otel
-
-
-
-# networks:
-#   outer:
-#     name: "outer"
-#     external: true
