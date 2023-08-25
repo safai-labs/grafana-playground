@@ -36,15 +36,15 @@ scrape_configs:
   #   static_configs:
   #     - targets: ["promtail:9080"]
   #
-  # - job_name: "telegraf"
-  #   static_configs:
-  #     - targets: ["telegraf:9273"]
+  - job_name: "telegraf"
+    static_configs:
+      - targets: ["telegraf:9273"]
   #
   # - job_name: "ping-metrics"
   #   static_configs:
   #     - targets: ["ping-metrics:8080"]
   #
-  - job_name: "resiliate"
-    static_configs:
-      - targets: [ "172.26.0.1:9000" ]
+  # - job_name: "resiliate"
+  #   static_configs:
+  #    - targets: [ "172.26.0.1:9000" ]
 
