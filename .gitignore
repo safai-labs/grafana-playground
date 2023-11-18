@@ -33,3 +33,4 @@ data/prometheus
 docker-compose.override.yml
 
 data
+*.zip
