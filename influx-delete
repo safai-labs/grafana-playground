@@ -1,0 +1,8 @@
+#!/bin/bash
+
+curl --request POST 'http://localhost:8086/api/v2/delete?org=saf.ai&bucket=helm_ahmed' \
+	--header 'Authorization: Token J_omfjEIKXcPiz-0O0F-jRs_4XHsC1FqMZEZs7G9TUgUT0R7oqL6fSBX28OqTBdRxYq4SSjpieT_velKujIliA==' \
+	--header 'Content-Type: application/json' --data '{
+    "start": "2020-03-01T00:00:00Z",
+    "stop": "2023-08-30T00:00:00Z"
+  }'
