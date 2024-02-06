@@ -69,3 +69,13 @@ services:
     depends_on:
       - telegraf
       - influxdb
+
+  aifs-collector:
+    build:
+      context: ./aifs-collector
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 8001:8000
+    volumes:
+      - ./aifs-collector/app:/app # Mounts the host 'app' directory to '/app' in the container
